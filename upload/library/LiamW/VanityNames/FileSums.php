@@ -23,6 +23,7 @@ class LiamW_VanityNames_FileSums
 			'library/LiamW/VanityNames/Listener.php' => '54bec138e0a69baa6c0015eb89e655f9',
 			'library/LiamW/VanityNames/Option/PrefixSuffix.php' => '04432f168cfb5d0934b53a3db710656e',
 			'library/LiamW/VanityNames/Option/RestrictedWords.php' => '2dead049024a0950a3b7e7c5fd51fb5c',
+			'library/LiamW/VanityNames/Template/Callback.php' => 'dd578bc000f3f811550f523235bc98cc',
 		);
 	}
 }

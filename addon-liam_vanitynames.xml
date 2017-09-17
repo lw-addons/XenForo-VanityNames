@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="liam_vanitynames" title="Vanity Names" version_string="1.4.0" version_id="1040070" url="https://xf-liam.com/products/vanity-names.5/" install_callback_class="LiamW_VanityNames_Installer" install_callback_method="install" uninstall_callback_class="LiamW_VanityNames_Installer" uninstall_callback_method="uninstall">
+<addon addon_id="liam_vanitynames" title="Vanity Names" version_string="1.4.1" version_id="1040170" url="https://xf-liam.com/products/vanity-names.5/" install_callback_class="LiamW_VanityNames_Installer" install_callback_method="install" uninstall_callback_class="LiamW_VanityNames_Installer" uninstall_callback_method="uninstall">
   <admin_navigation/>
   <admin_permissions/>
   <admin_style_properties/>
@@ -139,11 +139,23 @@ disableCustom</sub_options>
       <sub_options></sub_options>
       <relation group_id="vanityNames_options" display_order="10"/>
     </option>
+    <option option_id="vanityNames_profile_name" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value>1</default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="vanityNames_options" display_order="100"/>
+    </option>
+    <option option_id="vanityNames_profile_name_font" edit_format="textbox" data_type="string" can_backup="1">
+      <default_value>75%</default_value>
+      <edit_format_params>size=4</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="vanityNames_options" display_order="110"/>
+    </option>
     <option option_id="vanityNames_restrictedNames" edit_format="callback" data_type="array" can_backup="1" validation_class="LiamW_VanityNames_Option_RestrictedWords" validation_method="verifyOption">
       <default_value>a:0:{}</default_value>
       <edit_format_params>LiamW_VanityNames_Option_RestrictedWords::renderOption</edit_format_params>
       <sub_options>*</sub_options>
-      <relation group_id="vanityNames_options" display_order="100"/>
+      <relation group_id="vanityNames_options" display_order="200"/>
     </option>
     <option option_id="vanityNames_suffix" edit_format="textbox" data_type="string" can_backup="1" validation_class="LiamW_VanityNames_Option_PrefixSuffix" validation_method="verifyOption">
       <default_value></default_value>
@@ -180,6 +192,10 @@ disableCustom</sub_options>
     <phrase title="option_vanityNames_prefix_explain" version_id="10305" version_string="1.3.5"><![CDATA[Enter a prefix for vanity names.
 <br /><br />
 <span style="color: red; font-weight: bold;">Changing this value will result in existing vanity name URLs becoming invalid!</span>]]></phrase>
+    <phrase title="option_vanityNames_profile_name" version_id="1040070" version_string="1.4.0"><![CDATA[Display Vanity Name on Profile]]></phrase>
+    <phrase title="option_vanityNames_profile_name_explain" version_id="1040070" version_string="1.4.0"><![CDATA[If checked, the vanity name will be shown on the profile (with prefixes and suffixes), next to the username.]]></phrase>
+    <phrase title="option_vanityNames_profile_name_font" version_id="1040070" version_string="1.4.0"><![CDATA[Profile Name Font Size]]></phrase>
+    <phrase title="option_vanityNames_profile_name_font_explain" version_id="1040070" version_string="1.4.0"><![CDATA[Enter the font size for the profile vanity name. This can be any valid CSS font size.]]></phrase>
     <phrase title="option_vanityNames_restrictedNames" version_id="10201" version_string="1.2.1"><![CDATA[Restricted Names]]></phrase>
     <phrase title="option_vanityNames_restrictedNames_explain" version_id="10201" version_string="1.2.1"><![CDATA[Names listed here cannot be used by members. It can be used to reserve certain names.
 <br><br>
@@ -224,6 +240,10 @@ They can be used by admins editing in the admin panel.]]></phrase>
 						</dd>
 					</dl>
 				</xen:if>]]></replace>
+    </modification>
+    <modification template="member_view" modification_key="vanityNames_member_view" description="" execution_order="10" enabled="1" action="str_replace">
+      <find><![CDATA[{xen:helper richUserName, $user}]]></find>
+      <replace><![CDATA[$0 <xen:callback class="LiamW_VanityNames_Template_Callback" method="getVanityNameForDisplay" params="{xen:array 'user={$user}'}" />]]></replace>
     </modification>
   </public_template_modifications>
   <bb_code_media_sites/>
