@@ -67,6 +67,18 @@ class LiamW_VanityNames_Extend_DataWriter_User extends XFCP_LiamW_VanityNames_Ex
 			return false;
 		}
 
+		// No forward or backward slashes allowed
+		if (str_replace(array(
+				'/',
+				'\\'
+			), '', $vanityName) !== $vanityName
+		)
+		{
+			$this->error(new XenForo_Phrase('liam_vanitynames_invalid_format'), 'vanity_name');
+
+			return false;
+		}
+
 		// Don't allow users to use an existing route as a vanity name.
 		$request = XenForo_Application::getFc()->getRequest();
 		$match = XenForo_Application::getFc()->getDependencies()->route($request, $vanityName);
@@ -92,6 +104,9 @@ class LiamW_VanityNames_Extend_DataWriter_User extends XFCP_LiamW_VanityNames_Ex
 
 }
 
-/*class XFCP_LiamW_VanityNames_Extend_DataWriter_User extends XenForo_DataWriter_User
+if (false)
 {
-}*/
+	class XFCP_LiamW_VanityNames_Extend_DataWriter_User extends XenForo_DataWriter_User
+	{
+	}
+}

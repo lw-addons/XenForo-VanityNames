@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="liam_vanitynames" title="Vanity Names" version_string="1.3.1" version_id="10301" url="https://xf-liam.com/products/vanity-names.5/" install_callback_class="LiamW_VanityNames_Addon" install_callback_method="install" uninstall_callback_class="LiamW_VanityNames_Addon" uninstall_callback_method="uninstall">
+<addon addon_id="liam_vanitynames" title="Vanity Names" version_string="1.3.2" version_id="10302" url="https://xf-liam.com/products/vanity-names.5/" install_callback_class="LiamW_VanityNames_Addon" install_callback_method="install" uninstall_callback_class="LiamW_VanityNames_Addon" uninstall_callback_method="uninstall">
   <admin_navigation/>
   <admin_permissions/>
   <admin_style_properties/>
@@ -107,6 +107,7 @@
   <phrases>
     <phrase title="liam_vanityname" version_id="1" version_string="1.0"><![CDATA[Vanity Name]]></phrase>
     <phrase title="liam_vanitynames_invalidchars" version_id="1" version_string="1.0"><![CDATA[The vanity name can only contain letters, numbers and hyphens.]]></phrase>
+    <phrase title="liam_vanitynames_invalid_format" version_id="10301" version_string="1.3.1"><![CDATA[The entered name contains invalid characters.]]></phrase>
     <phrase title="liam_vanitynames_name_cannot_be_route" version_id="10102" version_string="1.1.2"><![CDATA[Your chosen name is a route! You cannot use a route as a vanity name.]]></phrase>
     <phrase title="liam_vanitynames_notunique" version_id="1" version_string="1.0"><![CDATA[Someone has already chosen that vanity name, please choose a different one!]]></phrase>
     <phrase title="liam_vanitynames_restricted" version_id="10000" version_string="1.0.0"><![CDATA[That name cannot be used, please choose a different one.]]></phrase>
@@ -154,5 +155,4 @@ They can be used by admins editing in the admin panel.]]></phrase>
   </public_template_modifications>
   <bb_code_media_sites/>
   <bb_codes/>
-  <brc_actions/>
 </addon>
