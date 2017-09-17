@@ -4,6 +4,8 @@ class LiamW_VanityNames_Deferred_VanityNameRegeneration extends XenForo_Deferred
 {
 	public function execute(array $deferred, array $data, $targetRunTime, &$status)
 	{
+		$startTime = microtime(true);
+
 		$data = array_merge(array(
 			'position' => 0,
 			'batch' => 70
@@ -19,8 +21,6 @@ class LiamW_VanityNames_Deferred_VanityNameRegeneration extends XenForo_Deferred
 			return true;
 		}
 
-
-
 		foreach ($userIds AS $userId)
 		{
 			$data['position'] = $userId;
@@ -31,6 +31,13 @@ class LiamW_VanityNames_Deferred_VanityNameRegeneration extends XenForo_Deferred
 			{
 				$userDw->setVanityNameFromUsername();
 				$userDw->save();
+			}
+
+			$runTime = microtime(true) - $startTime;
+
+			if ($targetRunTime && $runTime >= $targetRunTime)
+			{
+				break;
 			}
 		}
 

@@ -9,7 +9,7 @@ class LiamW_VanityNames_Extend_DataWriter_User extends XFCP_LiamW_VanityNames_Ex
 			'type' => self::TYPE_STRING,
 			'maxLength' => 50,
 			'verification' => array(
-				'$this',
+				$this,
 				'_verifyVanityName'
 			)
 		);
@@ -25,13 +25,13 @@ class LiamW_VanityNames_Extend_DataWriter_User extends XFCP_LiamW_VanityNames_Ex
 	 * @return bool
 	 * @throws XenForo_Exception
 	 */
-	protected function _verifyVanityName($vanityName)
+	protected function _verifyVanityName(&$vanityName)
 	{
 		// Change to lower case
 		$vanityName = mb_strtolower($vanityName);
 
 		// Empty name
-		if ($vanityName == "")
+		if (empty($vanityName))
 		{
 			return true;
 		}
@@ -48,7 +48,7 @@ class LiamW_VanityNames_Extend_DataWriter_User extends XFCP_LiamW_VanityNames_Ex
 			XenForo_Application::getOptions()->get('vanityNames_restrictedNames'));
 
 		// Admins can use restricted names
-		if (in_array($vanityName, $restrictedNames) && !$this->getOption(self::OPTION_ADMIN_EDIT))
+		if (!$this->getOption(self::OPTION_ADMIN_EDIT) && in_array($vanityName, $restrictedNames))
 		{
 			$this->error(new XenForo_Phrase('liam_vanitynames_restricted'), 'vanity_name');
 
@@ -59,7 +59,7 @@ class LiamW_VanityNames_Extend_DataWriter_User extends XFCP_LiamW_VanityNames_Ex
 		$userModel = $this->_getUserModel();
 
 		// Vanity names must be unique
-		if ($userModel->getUserByVanityName($vanityName) && $vanityName != $this->getExisting('vanity_name'))
+		if ($vanityName != $this->getExisting('vanity_name') && $userModel->getUserByVanityName($vanityName))
 		{
 			$this->error(new XenForo_Phrase('liam_vanitynames_notunique'), 'vanity_name');
 
@@ -77,8 +77,8 @@ class LiamW_VanityNames_Extend_DataWriter_User extends XFCP_LiamW_VanityNames_Ex
 		}
 
 		// Don't allow users to use an existing route as a vanity name.
-		$request = XenForo_Application::getFc()->getRequest();
-		$match = XenForo_Application::getFc()->getDependencies()->route($request, $vanityName);
+		$match = XenForo_Application::getFc()->getDependencies()
+			->route(new Zend_Controller_Request_Http(), $vanityName);
 		if ($match && $match->getControllerName())
 		{
 			$this->error(new XenForo_Phrase('liam_vanitynames_name_cannot_be_route'), 'vanity_name');
@@ -96,7 +96,7 @@ class LiamW_VanityNames_Extend_DataWriter_User extends XFCP_LiamW_VanityNames_Ex
 			$this->set('vanity_name', XenForo_Application::get('saveVanityName'));
 		}
 
-		if ($this->isInsert() && XenForo_Application::getOptions()->vanityNames_auto_apply['enabled'])
+		if ($this->isInsert() && XenForo_Application::getOptions()->get('vanityNames_auto_apply', 'enabled'))
 		{
 			$this->setVanityNameFromUsername();
 		}
@@ -117,9 +117,10 @@ class LiamW_VanityNames_Extend_DataWriter_User extends XFCP_LiamW_VanityNames_Ex
 		/** @var $userModel LiamW_VanityNames_Extend_Model_User */
 		$userModel = $this->_getUserModel();
 
+		// Make generated name unique by appending a digit to the end of it until it is unique.
 		$count = 1;
 
-		while ($userModel->getUserByVanityName($usernamePlain))
+		while ($usernamePlain != $this->get('vanity_name') && $userModel->getUserByVanityName($usernamePlain))
 		{
 			$usernamePlain .= $count;
 

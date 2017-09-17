@@ -18,7 +18,12 @@ class LiamW_VanityNames_Listener
 			return;
 		}
 
-		$vanityName = reset($parts);
+		$options = XenForo_Application::getOptions();
+
+		$vanityName = str_replace(array(
+			$options->vanityNames_prefix,
+			$options->vanityNames_suffix
+		), '', reset($parts));
 
 		if (empty($vanityName) || !preg_match("/^[a-zA-Z0-9-\\pL]+$/u", $vanityName))
 		{
@@ -32,9 +37,16 @@ class LiamW_VanityNames_Listener
 
 		if ($user)
 		{
+			// The tab
 			$routeMatch->setSections('members');
+
+			// The controller
 			$routeMatch->setControllerName('XenForo_ControllerPublic_Member');
+
+			// Index action
 			$routeMatch->setAction('');
+
+			// Set the user ID
 			$fc->getRequest()->setParam('user_id', $user['user_id']);
 		}
 	}

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="liam_vanitynames" title="Vanity Names" version_string="1.3.5" version_id="10305" url="https://xf-liam.com/products/vanity-names.5/" install_callback_class="LiamW_VanityNames_Installer" install_callback_method="install" uninstall_callback_class="LiamW_VanityNames_Installer" uninstall_callback_method="uninstall">
+<addon addon_id="liam_vanitynames" title="Vanity Names" version_string="1.4.0" version_id="1040070" url="https://xf-liam.com/products/vanity-names.5/" install_callback_class="LiamW_VanityNames_Installer" install_callback_method="install" uninstall_callback_class="LiamW_VanityNames_Installer" uninstall_callback_method="uninstall">
   <admin_navigation/>
   <admin_permissions/>
   <admin_style_properties/>
@@ -125,7 +125,7 @@
       <edit_format_params>liam_vanityNames_option_auto_apply</edit_format_params>
       <sub_options>enabled
 disableCustom</sub_options>
-      <relation group_id="vanityNames_options" display_order="10"/>
+      <relation group_id="vanityNames_options" display_order="20"/>
     </option>
     <option option_id="vanityNames_mode" edit_format="template" data_type="string" can_backup="1">
       <default_value>redirect</default_value>
@@ -133,11 +133,23 @@ disableCustom</sub_options>
       <sub_options></sub_options>
       <relation group_id="vanityNames_options" display_order="1"/>
     </option>
+    <option option_id="vanityNames_prefix" edit_format="textbox" data_type="string" can_backup="1" validation_class="LiamW_VanityNames_Option_PrefixSuffix" validation_method="verifyOption">
+      <default_value></default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="vanityNames_options" display_order="10"/>
+    </option>
     <option option_id="vanityNames_restrictedNames" edit_format="callback" data_type="array" can_backup="1" validation_class="LiamW_VanityNames_Option_RestrictedWords" validation_method="verifyOption">
       <default_value>a:0:{}</default_value>
       <edit_format_params>LiamW_VanityNames_Option_RestrictedWords::renderOption</edit_format_params>
       <sub_options>*</sub_options>
-      <relation group_id="vanityNames_options" display_order="20"/>
+      <relation group_id="vanityNames_options" display_order="100"/>
+    </option>
+    <option option_id="vanityNames_suffix" edit_format="textbox" data_type="string" can_backup="1" validation_class="LiamW_VanityNames_Option_PrefixSuffix" validation_method="verifyOption">
+      <default_value></default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="vanityNames_options" display_order="11"/>
     </option>
   </optiongroups>
   <permissions>
@@ -157,17 +169,25 @@ disableCustom</sub_options>
     <phrase title="liam_vanitynames_restricted" version_id="10000" version_string="1.0.0"><![CDATA[That name cannot be used, please choose a different one.]]></phrase>
     <phrase title="liam_vanityNames_will_regenerate_all_names_based_on_username" version_id="10303" version_string="1.3.3"><![CDATA[This will regenerate <b>all</b> vanity names based on the username.]]></phrase>
     <phrase title="liam_vanitynames_word" version_id="10000" version_string="1.0.0"><![CDATA[Word]]></phrase>
-    <phrase title="liam_vanityname_explain" version_id="10201" version_string="1.2.1"><![CDATA[If set, this page can be used to access your profile instead of your name and user id. <b>Current profile URL: <a href="{profileUrl}">{profileUrl}</a>.</b>]]></phrase>
+    <phrase title="liam_vanityname_explain" version_id="10305" version_string="1.3.5"><![CDATA[If set, this can be used to access your profile instead of your name and user id. <br /><b>Current profile URL: <a href="{profileUrl}">{profileUrl}</a>.</b>]]></phrase>
     <phrase title="option_group_vanityNames_options" version_id="10201" version_string="1.2.1"><![CDATA[Vanity Names]]></phrase>
     <phrase title="option_group_vanityNames_options_description" version_id="10201" version_string="1.2.1"><![CDATA[]]></phrase>
     <phrase title="option_vanityNames_auto_apply" version_id="10303" version_string="1.3.3"><![CDATA[Automatically Apply Vanity Name]]></phrase>
     <phrase title="option_vanityNames_auto_apply_explain" version_id="10303" version_string="1.3.3"><![CDATA[If checked, the vanity name will be automatically set on registration based on the username with special characters stripped. Spaces and underscores are converted to hyphens.]]></phrase>
     <phrase title="option_vanityNames_mode" version_id="10201" version_string="1.2.1"><![CDATA[Mode]]></phrase>
     <phrase title="option_vanityNames_mode_explain" version_id="10201" version_string="1.2.1"><![CDATA[]]></phrase>
+    <phrase title="option_vanityNames_prefix" version_id="10305" version_string="1.3.5"><![CDATA[Vanity Name Prefix]]></phrase>
+    <phrase title="option_vanityNames_prefix_explain" version_id="10305" version_string="1.3.5"><![CDATA[Enter a prefix for vanity names.
+<br /><br />
+<span style="color: red; font-weight: bold;">Changing this value will result in existing vanity name URLs becoming invalid!</span>]]></phrase>
     <phrase title="option_vanityNames_restrictedNames" version_id="10201" version_string="1.2.1"><![CDATA[Restricted Names]]></phrase>
     <phrase title="option_vanityNames_restrictedNames_explain" version_id="10201" version_string="1.2.1"><![CDATA[Names listed here cannot be used by members. It can be used to reserve certain names.
 <br><br>
 They can be used by admins editing in the admin panel.]]></phrase>
+    <phrase title="option_vanityNames_suffix" version_id="10305" version_string="1.3.5"><![CDATA[Vanity Name Suffix]]></phrase>
+    <phrase title="option_vanityNames_suffix_explain" version_id="10305" version_string="1.3.5"><![CDATA[Enter a suffix for vanity names.
+<br /><br />
+<span style="color: red; font-weight: bold;">Changing this value will result in existing vanity name URLs becoming invalid!</span>]]></phrase>
     <phrase title="permission_general_liam_vanitynames_use" version_id="1" version_string="1.0"><![CDATA[Use vanity name]]></phrase>
     <phrase title="vanityNames_disable_custom" version_id="10303" version_string="1.3.3"><![CDATA[Disable Custom]]></phrase>
     <phrase title="vanityNames_disable_custom_hint" version_id="10303" version_string="1.3.3"><![CDATA[If checked, users will be unable to set their own vanity name regardless of permissions.]]></phrase>
@@ -175,6 +195,8 @@ They can be used by admins editing in the admin panel.]]></phrase>
     <phrase title="vanityNames_mode_park_explain" version_id="10201" version_string="1.2.1"><![CDATA[If this is used, the vanity name URL will replace the main profile URL - the main profile URL will be redirected to the vanity name URL.]]></phrase>
     <phrase title="vanityNames_mode_redirect" version_id="10201" version_string="1.2.1"><![CDATA[Redirect]]></phrase>
     <phrase title="vanityNames_mode_redirect_explain" version_id="10201" version_string="1.2.1"><![CDATA[Vanity names will be redirected to the main profile URL.]]></phrase>
+    <phrase title="vanityNames_no_spaces_allowed_in_prefix_and_suffix" version_id="10305" version_string="1.3.5"><![CDATA[No spaces are allowed in the prefix or suffix!]]></phrase>
+    <phrase title="vanityNames_prefix_and_suffix_must_contain_url_valid_characters" version_id="10305" version_string="1.3.5"><![CDATA[Prefix and suffix must contain only URL-valid characters.]]></phrase>
     <phrase title="vanityNames_regenerating" version_id="10303" version_string="1.3.3"><![CDATA[Regenerating]]></phrase>
     <phrase title="vanityNames_vanity_names" version_id="10303" version_string="1.3.3"><![CDATA[Vanity Names]]></phrase>
   </phrases>
