@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="liam_vanitynames" title="Vanity Names" version_string="1.4.1" version_id="1040170" url="https://xf-liam.com/products/vanity-names.5/" install_callback_class="LiamW_VanityNames_Installer" install_callback_method="install" uninstall_callback_class="LiamW_VanityNames_Installer" uninstall_callback_method="uninstall">
+<addon addon_id="liam_vanitynames" title="Vanity Names" version_string="1.4.2" version_id="1040270" url="https://xf-liam.com/products/vanity-names.5/" install_callback_class="LiamW_VanityNames_Installer" install_callback_method="install" uninstall_callback_class="LiamW_VanityNames_Installer" uninstall_callback_method="uninstall">
   <admin_navigation/>
   <admin_permissions/>
   <admin_style_properties/>
@@ -145,9 +145,9 @@ disableCustom</sub_options>
       <sub_options></sub_options>
       <relation group_id="vanityNames_options" display_order="100"/>
     </option>
-    <option option_id="vanityNames_profile_name_font" edit_format="textbox" data_type="string" can_backup="1">
-      <default_value>75%</default_value>
-      <edit_format_params>size=4</edit_format_params>
+    <option option_id="vanityNames_profile_name_css" edit_format="textbox" data_type="string" can_backup="1">
+      <default_value>font-size: 75%; display: block;</default_value>
+      <edit_format_params>rows=3</edit_format_params>
       <sub_options></sub_options>
       <relation group_id="vanityNames_options" display_order="110"/>
     </option>
@@ -193,9 +193,9 @@ disableCustom</sub_options>
 <br /><br />
 <span style="color: red; font-weight: bold;">Changing this value will result in existing vanity name URLs becoming invalid!</span>]]></phrase>
     <phrase title="option_vanityNames_profile_name" version_id="1040070" version_string="1.4.0"><![CDATA[Display Vanity Name on Profile]]></phrase>
+    <phrase title="option_vanityNames_profile_name_css" version_id="1040170" version_string="1.4.1"><![CDATA[Profile Name CSS]]></phrase>
+    <phrase title="option_vanityNames_profile_name_css_explain" version_id="1040170" version_string="1.4.1"><![CDATA[Enter the inline CSS value for the profile page vanity name.]]></phrase>
     <phrase title="option_vanityNames_profile_name_explain" version_id="1040070" version_string="1.4.0"><![CDATA[If checked, the vanity name will be shown on the profile (with prefixes and suffixes), next to the username.]]></phrase>
-    <phrase title="option_vanityNames_profile_name_font" version_id="1040070" version_string="1.4.0"><![CDATA[Profile Name Font Size]]></phrase>
-    <phrase title="option_vanityNames_profile_name_font_explain" version_id="1040070" version_string="1.4.0"><![CDATA[Enter the font size for the profile vanity name. This can be any valid CSS font size.]]></phrase>
     <phrase title="option_vanityNames_restrictedNames" version_id="10201" version_string="1.2.1"><![CDATA[Restricted Names]]></phrase>
     <phrase title="option_vanityNames_restrictedNames_explain" version_id="10201" version_string="1.2.1"><![CDATA[Names listed here cannot be used by members. It can be used to reserve certain names.
 <br><br>

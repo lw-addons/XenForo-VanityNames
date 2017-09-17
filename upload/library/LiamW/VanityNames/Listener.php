@@ -2,6 +2,8 @@
 
 class LiamW_VanityNames_Listener
 {
+	public static $vanityNameRegex = '/^[a-zA-Z0-9-\\pL\.@]+$/u';
+
 	/**
 	 * Override the router, to make vanity names go to correct place.
 	 *
@@ -25,7 +27,7 @@ class LiamW_VanityNames_Listener
 			$options->vanityNames_suffix
 		), '', reset($parts));
 
-		if (empty($vanityName) || !preg_match("/^[a-zA-Z0-9-\\pL]+$/u", $vanityName))
+		if (empty($vanityName) || !preg_match(self::$vanityNameRegex, $vanityName))
 		{
 			// If it isn't valid, don't treat as vanity name.
 			return;

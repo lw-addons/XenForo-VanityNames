@@ -36,7 +36,7 @@ class LiamW_VanityNames_Extend_DataWriter_User extends XFCP_LiamW_VanityNames_Ex
 			return true;
 		}
 
-		if (!preg_match("/^[a-zA-Z0-9-\\pL]+$/u", $vanityName))
+		if (!preg_match(LiamW_VanityNames_Listener::$vanityNameRegex, $vanityName))
 		{
 			$this->error(new XenForo_Phrase('liam_vanitynames_invalid_format'), 'vanity_name');
 

@@ -8,11 +8,11 @@ class LiamW_VanityNames_Template_Callback
 
 		if ($options->vanityNames_profile_name && $params['user']['vanity_name'])
 		{
-			$fontSize = $options->vanityNames_profile_name_font ? $options->vanityNames_profile_name_font : '75%';
+			$vanityNamesCss = $options->vanityNames_profile_name_css;
 
 			return XenForo_Template_Helper_Core::helperUserNameHtml($params['user'],
 				$options->vanityNames_prefix . $params['user']['vanity_name'] . $options->vanityNames_suffix, false,
-				array('style' => 'font-size: ' . $fontSize));
+				array('style' => $vanityNamesCss));
 		}
 
 		return '';
