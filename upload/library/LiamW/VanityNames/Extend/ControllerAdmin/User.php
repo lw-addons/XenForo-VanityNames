@@ -9,3 +9,7 @@ class LiamW_VanityNames_Extend_ControllerAdmin_User extends XFCP_LiamW_VanityNam
 		return parent::actionSave();
 	}
 }
+
+/*class XFCP_LiamW_VanityNames_Extend_ControllerAdmin_User extends XenForo_ControllerAdmin_User
+{
+}*/
