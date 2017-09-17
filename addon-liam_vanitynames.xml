@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<addon addon_id="liam_vanitynames" title="Vanity Names" version_string="1.2.1" version_id="10201" url="https://xf-liam.com" install_callback_class="LiamW_VanityNames_Addon" install_callback_method="install" uninstall_callback_class="LiamW_VanityNames_Addon" uninstall_callback_method="uninstall">
+  <admin_navigation/>
+  <admin_permissions/>
+  <admin_style_properties/>
+  <admin_templates>
+    <template title="liam_vanitynames_option_template_restrictedwords"><![CDATA[<xen:require js="js/xenforo/options_censor.js" />
+
+<xen:controlunit label="{$preparedOption.title}" hint="{$preparedOption.hint}">
+	<xen:explain>{xen:raw $preparedOption.explain}</xen:explain>
+	<xen:html>
+		<ul>
+			<xen:foreach loop="$words" key="$counter" value="$word">
+			<li>
+				<xen:textbox name="{$fieldPrefix}[{$preparedOption.option_id}][{$counter}]" value="{$word}" placeholder="{xen:phrase liam_vanitynames_word}" />
+			</li>
+			</xen:foreach>
+		
+			<li class="CensorWordOptionListener">
+				<xen:textbox name="{$fieldPrefix}[{$preparedOption.option_id}][{$nextCounter}]" value="" placeholder="{xen:phrase liam_vanitynames_word}"  />
+			</li>
+		</ul>
+		
+		<input type="hidden" name="{$listedFieldName}" value="{$preparedOption.option_id}" />
+		{xen:raw $editLink}
+	</xen:html>
+</xen:controlunit>]]></template>
+  </admin_templates>
+  <admin_template_modifications>
+    <modification template="user_edit" modification_key="liam_vanitynames_vanitynameadmin" description="" execution_order="10" enabled="1" action="str_replace">
+      <find><![CDATA[<xen:controlunit label="{xen:phrase date_of_birth}:">
+				<xen:select name="dob_month" value="{$user.dob_month}" inputclass="autoSize">
+					<xen:option value=""></xen:option>
+					<xen:option value="1">{xen:phrase month_1}</xen:option>
+					<xen:option value="2">{xen:phrase month_2}</xen:option>
+					<xen:option value="3">{xen:phrase month_3}</xen:option>
+					<xen:option value="4">{xen:phrase month_4}</xen:option>
+					<xen:option value="5">{xen:phrase month_5}</xen:option>
+					<xen:option value="6">{xen:phrase month_6}</xen:option>
+					<xen:option value="7">{xen:phrase month_7}</xen:option>
+					<xen:option value="8">{xen:phrase month_8}</xen:option>
+					<xen:option value="9">{xen:phrase month_9}</xen:option>
+					<xen:option value="10">{xen:phrase month_10}</xen:option>
+					<xen:option value="11">{xen:phrase month_11}</xen:option>
+					<xen:option value="12">{xen:phrase month_12}</xen:option>
+				</xen:select>
+				<xen:textbox name="dob_day" value="{xen:if {$user.dob_day}, {$user.dob_day}}" size="2" inputclass="autoSize" placeholder="{xen:phrase day}" />
+				<xen:textbox name="dob_year" value="{xen:if {$user.dob_year}, {$user.dob_year}}" size="4" inputclass="autoSize" placeholder="{xen:phrase year}" />
+			</xen:controlunit>]]></find>
+      <replace><![CDATA[$0
+
+			<xen:textboxunit label="{xen:phrase liam_vanityname}:" name="vanity_name" value="{xen:if {$user.vanity_name}, {$user.vanity_name}}" />]]></replace>
+    </modification>
+  </admin_template_modifications>
+  <code_events/>
+  <code_event_listeners>
+    <listener event_id="front_controller_pre_dispatch" execute_order="10" callback_class="LiamW_VanityNames_Addon" callback_method="routerOverride" active="1" hint="" description="Catches vanity subdomains and routes, and directs them accordingly"/>
+    <listener event_id="load_class" execute_order="10" callback_class="LiamW_VanityNames_Addon" callback_method="extend" active="1" hint="" description=""/>
+    <listener event_id="template_create" execute_order="10" callback_class="LiamW_VanityNames_Addon" callback_method="containerParams" active="1" hint="" description=""/>
+  </code_event_listeners>
+  <cron/>
+  <email_templates/>
+  <email_template_modifications/>
+  <optiongroups>
+    <group group_id="liam_vanitynames_options" display_order="5000" debug_only="0"/>
+    <option option_id="liam_vanitynames_restrictednames" edit_format="callback" data_type="array" can_backup="1" validation_class="LiamW_VanityNames_Option_RestrictedWords" validation_method="verifyOption">
+      <default_value>a:0:{}</default_value>
+      <edit_format_params>LiamW_VanityNames_Option_RestrictedWords::renderOption</edit_format_params>
+      <sub_options>*</sub_options>
+      <relation group_id="liam_vanitynames_options" display_order="1"/>
+    </option>
+  </optiongroups>
+  <permissions>
+    <permission_groups/>
+    <permissions>
+      <permission permission_group_id="general" permission_id="liam_vanitynames_use" permission_type="flag" default_value="unset" interface_group_id="generalPermissions" display_order="50000"/>
+    </permissions>
+    <interface_groups/>
+  </permissions>
+  <phrases>
+    <phrase title="liam_vanityname" version_id="1" version_string="1.0"><![CDATA[Vanity Name]]></phrase>
+    <phrase title="liam_vanitynames_invalidchars" version_id="1" version_string="1.0"><![CDATA[The vanity name can only contain letters, numbers and hyphens.]]></phrase>
+    <phrase title="liam_vanitynames_name_cannot_be_route" version_id="10102" version_string="1.1.2"><![CDATA[Your chosen name is a route! You cannot use a route as a vanity name.]]></phrase>
+    <phrase title="liam_vanitynames_notunique" version_id="1" version_string="1.0"><![CDATA[Someone has already chosen that vanity name, please choose a different one!]]></phrase>
+    <phrase title="liam_vanitynames_restricted" version_id="10000" version_string="1.0.0"><![CDATA[That name cannot be used, please choose a different one.]]></phrase>
+    <phrase title="liam_vanitynames_word" version_id="10000" version_string="1.0.0"><![CDATA[Word]]></phrase>
+    <phrase title="liam_vanityname_explain" version_id="1" version_string="1.0"><![CDATA[If this is set, you can link to your profile from <boardurl>/<vanityname> or <vanityname>.<boardurl>.]]></phrase>
+    <phrase title="option_group_liam_vanitynames_options" version_id="10000" version_string="1.0.0"><![CDATA[Vanity Names]]></phrase>
+    <phrase title="option_group_liam_vanitynames_options_description" version_id="10000" version_string="1.0.0"><![CDATA[Options relating to the vanity names addon...]]></phrase>
+    <phrase title="option_liam_vanitynames_restrictednames" version_id="10000" version_string="1.0.0"><![CDATA[Restricted Names]]></phrase>
+    <phrase title="option_liam_vanitynames_restrictednames_explain" version_id="10000" version_string="1.0.0"><![CDATA[Names listed here cannot be used by members. It can be used to reserve certain names.
+<br><br>
+They can be used by admins editing in the admin panel.]]></phrase>
+    <phrase title="permission_general_liam_vanitynames_use" version_id="1" version_string="1.0"><![CDATA[Use vanity name]]></phrase>
+  </phrases>
+  <route_prefixes/>
+  <style_properties/>
+  <templates/>
+  <public_template_modifications>
+    <modification template="account_personal_details" modification_key="liam_vanitynames_entry" description="" execution_order="10" enabled="1" action="str_replace">
+      <find><![CDATA[<xen:if is="{$canEditCustomTitle}">
+					<dl class="ctrlUnit">
+						<dt><label for="ctrl_custom_title">{xen:phrase custom_title}:</label></dt>
+						<dd>
+							<input type="text" name="custom_title" value="{$visitor.custom_title}" id="ctrl_custom_title" class="textCtrl" />
+							<p class="explain">{xen:phrase if_specified_replace_title_that_displays_under_name_in_posts}</p>
+						</dd>
+					</dl>
+				</xen:if>]]></find>
+      <replace><![CDATA[$0
+				<xen:if is="{$canEditVanityName}">
+					<dl class="ctrlUnit">
+						<dt><label for="ctrl_vanity_name">{xen:phrase liam_vanityname}:</label></dt>
+						<dd>
+							<input type="text" name="vanity_name" value="{$visitor.vanity_name}" id="ctrl_vanity_name" class="textCtrl" />
+							<p class="explain">{xen:phrase liam_vanityname_explain}</p>
+						</dd>
+					</dl>
+				</xen:if>]]></replace>
+    </modification>
+  </public_template_modifications>
+  <bb_code_media_sites/>
+  <bb_codes/>
+</addon>
