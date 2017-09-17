@@ -17,10 +17,10 @@ class LiamW_VanityNames_Extend_DataWriter_User extends XFCP_LiamW_VanityNames_Ex
 		return $existingFields;
 	}
 
-	protected function _verifyVanityName(&$vanityName)
+	protected function _verifyVanityName($vanityName)
 	{
 		// Change to lower case
-		$vanityName = strtolower($vanityName);
+		$vanityName = mb_strtolower($vanityName);
 
 		// Unchanged
 		if ($vanityName === $this->getExisting('vanity_name'))
@@ -35,7 +35,7 @@ class LiamW_VanityNames_Extend_DataWriter_User extends XFCP_LiamW_VanityNames_Ex
 		}
 
 		// Change restricted names to lower case
-		$restrictedNames = array_map('strtolower',
+		$restrictedNames = array_map('mb_strtolower',
 			XenForo_Application::getOptions()->get('vanityNames_restrictedNames'));
 
 		// Admins can use restricted names
@@ -53,14 +53,6 @@ class LiamW_VanityNames_Extend_DataWriter_User extends XFCP_LiamW_VanityNames_Ex
 		if ($userModel->getUserByVanityName($vanityName))
 		{
 			$this->error(new XenForo_Phrase('liam_vanitynames_notunique'), 'vanity_name');
-
-			return false;
-		}
-
-		// Only alphanumeric (with an underscore and a hyphen)
-		if (!preg_match('/^[a-z0-9-_]+$/', $vanityName))
-		{
-			$this->error(new XenForo_Phrase('liam_vanitynames_invalidchars'), 'vanity_name');
 
 			return false;
 		}

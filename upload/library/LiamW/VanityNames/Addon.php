@@ -40,15 +40,15 @@ class LiamW_VanityNames_Addon
 	 */
 	public static function routerOverride(XenForo_FrontController $fc, XenForo_RouteMatch &$routeMatch)
 	{
-		$slashCount = substr_count($fc->getRequest()->getRequestUri(), '/');
+		$routePath = $fc->getDependencies()->getRouter()->getRoutePath($fc->getRequest());
+		$parts = array_filter(explode('/', $routePath));
 
-		if ($slashCount < 1 || $slashCount > 2)
+		if (count($parts) > 1)
 		{
 			return;
 		}
 
-		$vanityName = str_replace('/', '', $fc->getRequest()->getRequestUri());
-		$vanityName = urldecode($vanityName);
+		$vanityName = reset($parts);
 
 		if ($vanityName == '')
 		{
@@ -62,6 +62,7 @@ class LiamW_VanityNames_Addon
 
 		if ($user)
 		{
+			$routeMatch->setSections('members');
 			$routeMatch->setControllerName('XenForo_ControllerPublic_Member');
 			$routeMatch->setAction('');
 			$fc->getRequest()->setParam('user_id', $user['user_id']);
