@@ -20,7 +20,7 @@ class LiamW_VanityNames_Listener
 
 		$vanityName = reset($parts);
 
-		if (empty($vanityName) || !preg_match("/^[a-zA-Z-\\pL]+$/u", $vanityName))
+		if (empty($vanityName) || !preg_match("/^[a-zA-Z0-9-\\pL]+$/u", $vanityName))
 		{
 			// If it isn't valid, don't treat as vanity name.
 			return;

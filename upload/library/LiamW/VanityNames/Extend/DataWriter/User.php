@@ -36,7 +36,7 @@ class LiamW_VanityNames_Extend_DataWriter_User extends XFCP_LiamW_VanityNames_Ex
 			return true;
 		}
 
-		if (!preg_match("/^[a-zA-Z-\\pL]+$/u", $vanityName))
+		if (!preg_match("/^[a-zA-Z0-9-\\pL]+$/u", $vanityName))
 		{
 			$this->error(new XenForo_Phrase('liam_vanitynames_invalid_format'), 'vanity_name');
 
@@ -108,7 +108,7 @@ class LiamW_VanityNames_Extend_DataWriter_User extends XFCP_LiamW_VanityNames_Ex
 	{
 		$usernamePlain = preg_replace(array(
 			"/[_ ]/u",
-			"/[^a-zA-Z-\\pL]/u"
+			"/[^a-zA-Z0-9-\\pL]/u"
 		), array(
 			'-',
 			''
@@ -117,9 +117,13 @@ class LiamW_VanityNames_Extend_DataWriter_User extends XFCP_LiamW_VanityNames_Ex
 		/** @var $userModel LiamW_VanityNames_Extend_Model_User */
 		$userModel = $this->_getUserModel();
 
+		$count = 1;
+
 		while ($userModel->getUserByVanityName($usernamePlain))
 		{
-			$usernamePlain .= '-';
+			$usernamePlain .= $count;
+
+			$count++;
 		}
 
 		$this->set('vanity_name', mb_strtolower($usernamePlain));

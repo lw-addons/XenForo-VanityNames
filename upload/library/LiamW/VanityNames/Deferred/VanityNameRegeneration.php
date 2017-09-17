@@ -19,6 +19,8 @@ class LiamW_VanityNames_Deferred_VanityNameRegeneration extends XenForo_Deferred
 			return true;
 		}
 
+
+
 		foreach ($userIds AS $userId)
 		{
 			$data['position'] = $userId;

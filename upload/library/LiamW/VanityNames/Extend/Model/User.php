@@ -24,6 +24,10 @@ class LiamW_VanityNames_Extend_Model_User extends XFCP_LiamW_VanityNames_Extend_
 		', $vanityName);
 	}
 
+	public function removeAllVanityNames()
+	{
+		$this->_getDb()->update('xf_user', array('vanity_name' => ''));
+	}
 }
 
 if (false)
