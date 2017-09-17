@@ -113,7 +113,10 @@ class LiamW_VanityNames_Installer
 			$db->query($sql);
 		} catch (Zend_Db_Exception $e)
 		{
-			XenForo_Error::logException($e);
+			if (XenForo_Application::debugMode())
+			{
+				XenForo_Error::logException($e);
+			}
 		}
 	}
 }

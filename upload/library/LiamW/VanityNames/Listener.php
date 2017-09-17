@@ -22,10 +22,23 @@ class LiamW_VanityNames_Listener
 
 		$options = XenForo_Application::getOptions();
 
+		$prefix = $options->vanityNames_prefix;
+		$suffix = $options->vanityNames_suffix;
+
+		$vanityNamePart = reset($parts);
+
+		if (!$options->liam_vanityNames_allow_unprefixed && (substr($vanityNamePart, 0,
+					strlen($prefix)) !== $prefix || substr($vanityNamePart, -strlen($suffix),
+					strlen($suffix)) !== $suffix)
+		)
+		{
+			return;
+		}
+
 		$vanityName = str_replace(array(
-			$options->vanityNames_prefix,
-			$options->vanityNames_suffix
-		), '', reset($parts));
+			$prefix,
+			$suffix
+		), '', $vanityNamePart);
 
 		if (empty($vanityName) || !preg_match(self::$vanityNameRegex, $vanityName))
 		{
