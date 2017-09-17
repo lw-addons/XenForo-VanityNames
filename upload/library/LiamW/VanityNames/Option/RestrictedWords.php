@@ -2,7 +2,6 @@
 
 abstract class LiamW_VanityNames_Option_RestrictedWords
 {
-
 	public static function renderOption(XenForo_View $view, $fieldPrefix, array $preparedOption, $canEdit)
 	{
 		$words = $preparedOption['option_value'];

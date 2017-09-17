@@ -9,7 +9,8 @@ class LiamW_VanityNames_Extend_ControllerPublic_Account extends XFCP_LiamW_Vanit
 		if ($response instanceof XenForo_ControllerResponse_View && $response->subView)
 		{
 			$response->subView->params['canEditVanityName'] = XenForo_Visitor::getInstance()
-				->hasPermission('general', 'liam_vanitynames_use');
+					->hasPermission('general',
+						'liam_vanitynames_use') && !XenForo_Application::getOptions()->vanityNames_auto_apply['disableCustom'];
 		}
 
 		return $response;
@@ -19,7 +20,9 @@ class LiamW_VanityNames_Extend_ControllerPublic_Account extends XFCP_LiamW_Vanit
 	{
 		$visitor = XenForo_Visitor::getInstance();
 
-		if ($visitor->hasPermission('general', 'liam_vanitynames_use'))
+		if ($visitor->hasPermission('general',
+				'liam_vanitynames_use') && !XenForo_Application::getOptions()->vanityNames_auto_apply['disableCustom']
+		)
 		{
 			XenForo_Application::set('saveVanityName',
 				$this->_input->filterSingle('vanity_name', XenForo_Input::STRING));
@@ -29,6 +32,9 @@ class LiamW_VanityNames_Extend_ControllerPublic_Account extends XFCP_LiamW_Vanit
 	}
 }
 
-/*class XFCP_LiamW_VanityNames_Extend_ControllerPublic_Account extends XenForo_ControllerPublic_Account
+if (false)
 {
-}*/
+	class XFCP_LiamW_VanityNames_Extend_ControllerPublic_Account extends XenForo_ControllerPublic_Account
+	{
+	}
+}

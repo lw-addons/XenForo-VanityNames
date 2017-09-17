@@ -1,37 +1,7 @@
 <?php
 
-class LiamW_VanityNames_Addon
+class LiamW_VanityNames_Listener
 {
-	/**
-	 * Install the addon. Checks for correct XenForo version, and creates tables.
-	 *
-	 * @param $installedAddon
-	 *
-	 * @throws XenForo_Exception
-	 */
-	public static function install($installedAddon)
-	{
-		if (XenForo_Application::$versionId < 1020070)
-		{
-			throw new XenForo_Exception("This addon requires XenForo 1.2.0+. Please upgrade XenForo.",
-				true);
-		}
-
-		$version = is_array($installedAddon) ? $installedAddon['version_id'] : 0;
-
-		$userInstaller = LiamW_Shared_DatabaseSchema_Abstract2::create('LiamW_VanityNames_DatabaseSchema_User');
-		$userInstaller->install($version);
-	}
-
-	/**
-	 * Uninstall, remove tables...
-	 */
-	public static function uninstall()
-	{
-		$userInstaller = LiamW_Shared_DatabaseSchema_Abstract2::create('LiamW_VanityNames_DatabaseSchema_User');
-		$userInstaller->uninstall();
-	}
-
 	/**
 	 * Override the router, to make vanity names go to correct place.
 	 *
@@ -50,14 +20,14 @@ class LiamW_VanityNames_Addon
 
 		$vanityName = reset($parts);
 
-		if ($vanityName == '')
+		if (empty($vanityName) || !preg_match("/^[a-zA-Z-\\pL]+$/u", $vanityName))
 		{
+			// If it isn't valid, don't treat as vanity name.
 			return;
 		}
 
 		/* @var $userModel LiamW_VanityNames_Extend_Model_User */
 		$userModel = XenForo_Model::create('XenForo_Model_User');
-
 		$user = $userModel->getUserByVanityName($vanityName);
 
 		if ($user)

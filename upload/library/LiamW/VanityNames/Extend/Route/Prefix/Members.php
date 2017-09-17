@@ -13,6 +13,7 @@ class LiamW_VanityNames_Extend_Route_Prefix_Members extends XFCP_LiamW_VanityNam
 		}
 
 		// Use vanity name if there's no action, the vanity name is defined and if the mode is park OR we're forcing vanity name
+		// This is what causes the park/redirect to be applied - the member controller canonicalizes the URL, calling this method.
 		if (!$action && !empty($data['vanity_name']) && (XenForo_Application::getOptions()->vanityNames_mode == 'park' || $forceVanity))
 		{
 			return XenForo_Link::buildBasicLink($data['vanity_name'], false, $extension);
@@ -23,6 +24,9 @@ class LiamW_VanityNames_Extend_Route_Prefix_Members extends XFCP_LiamW_VanityNam
 	}
 }
 
-/*class XFCP_LiamW_VanityNames_Route_Prefix_Members extends XenForo_Route_Prefix_Members
+if (false)
 {
-}*/
+	class XFCP_LiamW_VanityNames_Extend_Route_Prefix_Members extends XenForo_Route_Prefix_Members
+	{
+	}
+}

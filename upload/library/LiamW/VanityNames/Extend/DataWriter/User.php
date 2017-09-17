@@ -17,21 +17,30 @@ class LiamW_VanityNames_Extend_DataWriter_User extends XFCP_LiamW_VanityNames_Ex
 		return $existingFields;
 	}
 
+	/**
+	 * Check the entered name to make sure it is valid. Checks non-modified names in case of modification to checks.
+	 *
+	 * @param $vanityName
+	 *
+	 * @return bool
+	 * @throws XenForo_Exception
+	 */
 	protected function _verifyVanityName($vanityName)
 	{
 		// Change to lower case
 		$vanityName = mb_strtolower($vanityName);
 
-		// Unchanged
-		if ($vanityName === $this->getExisting('vanity_name'))
-		{
-			return true;
-		}
-
 		// Empty name
 		if ($vanityName == "")
 		{
 			return true;
+		}
+
+		if (!preg_match("/^[a-zA-Z-\\pL]+$/u", $vanityName))
+		{
+			$this->error(new XenForo_Phrase('liam_vanitynames_invalid_format'), 'vanity_name');
+
+			return false;
 		}
 
 		// Change restricted names to lower case
@@ -50,7 +59,7 @@ class LiamW_VanityNames_Extend_DataWriter_User extends XFCP_LiamW_VanityNames_Ex
 		$userModel = $this->_getUserModel();
 
 		// Vanity names must be unique
-		if ($userModel->getUserByVanityName($vanityName))
+		if ($userModel->getUserByVanityName($vanityName) && $vanityName != $this->getExisting('vanity_name'))
 		{
 			$this->error(new XenForo_Phrase('liam_vanitynames_notunique'), 'vanity_name');
 
@@ -63,18 +72,6 @@ class LiamW_VanityNames_Extend_DataWriter_User extends XFCP_LiamW_VanityNames_Ex
 		{
 			$this->error(new XenForo_Phrase('please_enter_name_that_does_not_contain_any_censored_words'),
 				'vanity_name');
-
-			return false;
-		}
-
-		// No forward or backward slashes allowed
-		if (str_replace(array(
-				'/',
-				'\\'
-			), '', $vanityName) !== $vanityName
-		)
-		{
-			$this->error(new XenForo_Phrase('liam_vanitynames_invalid_format'), 'vanity_name');
 
 			return false;
 		}
@@ -99,7 +96,33 @@ class LiamW_VanityNames_Extend_DataWriter_User extends XFCP_LiamW_VanityNames_Ex
 			$this->set('vanity_name', XenForo_Application::get('saveVanityName'));
 		}
 
+		if ($this->isInsert() && XenForo_Application::getOptions()->vanityNames_auto_apply['enabled'])
+		{
+			$this->setVanityNameFromUsername();
+		}
+
 		parent::_preSave();
+	}
+
+	public function setVanityNameFromUsername()
+	{
+		$usernamePlain = preg_replace(array(
+			"/[_ ]/u",
+			"/[^a-zA-Z-\\pL]/u"
+		), array(
+			'-',
+			''
+		), $this->get('username'));
+
+		/** @var $userModel LiamW_VanityNames_Extend_Model_User */
+		$userModel = $this->_getUserModel();
+
+		while ($userModel->getUserByVanityName($usernamePlain))
+		{
+			$usernamePlain .= '-';
+		}
+
+		$this->set('vanity_name', mb_strtolower($usernamePlain));
 	}
 
 }

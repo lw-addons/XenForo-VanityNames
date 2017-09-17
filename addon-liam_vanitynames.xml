@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<addon addon_id="liam_vanitynames" title="Vanity Names" version_string="1.3.2" version_id="10302" url="https://xf-liam.com/products/vanity-names.5/" install_callback_class="LiamW_VanityNames_Addon" install_callback_method="install" uninstall_callback_class="LiamW_VanityNames_Addon" uninstall_callback_method="uninstall">
+<addon addon_id="liam_vanitynames" title="Vanity Names" version_string="1.3.4" version_id="10304" url="https://xf-liam.com/products/vanity-names.5/" install_callback_class="LiamW_VanityNames_Installer" install_callback_method="install" uninstall_callback_class="LiamW_VanityNames_Installer" uninstall_callback_method="uninstall">
   <admin_navigation/>
   <admin_permissions/>
   <admin_style_properties/>
   <admin_templates>
+    <template title="liam_vanityNames_option_auto_apply"><![CDATA[<xen:checkboxunit label="">
+	<xen:option label="{$preparedOption.title}" name="{$fieldPrefix}[{$preparedOption.option_id}][enabled]" selected="{$preparedOption.option_value.enabled}">
+		<xen:disabled>
+			<xen:checkbox>
+				<xen:option label="{xen:phrase vanityNames_disable_custom}" hint="{xen:phrase vanityNames_disable_custom_hint}" name="{$fieldPrefix}[{$preparedOption.option_id}][disableCustom]" selected="{$preparedOption.option_value.disableCustom}" />
+			</xen:checkbox>
+		</xen:disabled>
+	</xen:option>
+	<xen:explain>{xen:raw $preparedOption.explain}</xen:explain>
+	<xen:html>
+		<input type="hidden" name="{$listedFieldName}" value="{$preparedOption.option_id}" />
+		{xen:raw $editLink}
+	</xen:html>
+</xen:checkboxunit>]]></template>
     <template title="vanityNames_option_mode"><![CDATA[<xen:radiounit hint="{$preparedOption.hint}" name="{$fieldPrefix}[{$preparedOption.option_id}]">
 	<xen:label>{$preparedOption.title}</xen:label>
 	
@@ -68,22 +82,51 @@
 
 			<xen:textboxunit label="{xen:phrase liam_vanityname}:" name="vanity_name" value="{xen:if {$user.vanity_name}, {$user.vanity_name}}" />]]></replace>
     </modification>
+    <modification template="tools_rebuild" modification_key="vanityNames_tools_rebuild" description="" execution_order="10" enabled="1" action="str_replace">
+      <find><![CDATA[<xen:form action="{xen:adminlink 'tools/trigger-deferred'}">
+	<h2 class="subHeading">{xen:phrase rebuild_user_caches}</h2>
+	<xen:spinboxunit name="options[batch]" value="100" step="50" min="1" label="{xen:phrase items_to_process_per_page}:" />
+
+	<xen:submitunit save="{xen:phrase rebuild_now}" />
+	<input type="hidden" name="cache" value="User" />
+</xen:form>]]></find>
+      <replace><![CDATA[$0
+
+<xen:form action="{xen:adminlink 'tools/trigger-deferred'}">
+	<h2 class="subHeading">{xen:phrase liam_vanityNames_regenerate_vanity_names}</h2>
+	
+	<p class="section">{xen:phrase liam_vanityNames_will_regenerate_all_names_based_on_username}</p>	
+
+	<xen:spinboxunit name="options[batch]" value="100" step="50" min="1" label="{xen:phrase items_to_process_per_page}:" />
+
+	<xen:submitunit save="{xen:phrase rebuild_now}" />
+	<input type="hidden" name="cache" value="LiamW_VanityNames_Deferred_VanityNameRegeneration" />
+</xen:form>]]></replace>
+    </modification>
   </admin_template_modifications>
   <code_events/>
   <code_event_listeners>
-    <listener event_id="front_controller_pre_dispatch" execute_order="10" callback_class="LiamW_VanityNames_Addon" callback_method="routerOverride" active="1" hint="" description=""/>
-    <listener event_id="load_class_controller" execute_order="10" callback_class="LiamW_VanityNames_Addon" callback_method="extendAccountController" active="1" hint="XenForo_ControllerPublic_Account" description="XenForo_ControllerPublic_Account"/>
-    <listener event_id="load_class_controller" execute_order="10" callback_class="LiamW_VanityNames_Addon" callback_method="extendUserAdminController" active="1" hint="XenForo_ControllerAdmin_User" description="XenForo_ControllerAdmin_User"/>
-    <listener event_id="load_class_datawriter" execute_order="10" callback_class="LiamW_VanityNames_Addon" callback_method="extendUserDataWriter" active="1" hint="XenForo_DataWriter_User" description="XenForo_DataWriter_User"/>
-    <listener event_id="load_class_model" execute_order="10" callback_class="LiamW_VanityNames_Addon" callback_method="extendUserModel" active="1" hint="XenForo_Model_User" description="XenForo_Model_User"/>
-    <listener event_id="load_class_route_prefix" execute_order="10" callback_class="LiamW_VanityNames_Addon" callback_method="extendMembersRoute" active="1" hint="XenForo_Route_Prefix_Members" description="XenForo_Route_Prefix_Members"/>
-    <listener event_id="prepare_user_change_log_field" execute_order="10" callback_class="LiamW_VanityNames_Addon" callback_method="changeLogField" active="1" hint="" description=""/>
+    <listener event_id="file_health_check" execute_order="10" callback_class="LiamW_VanityNames_FileSums" callback_method="addHashes" active="1" hint="" description=""/>
+    <listener event_id="front_controller_pre_dispatch" execute_order="10" callback_class="LiamW_VanityNames_Listener" callback_method="routerOverride" active="1" hint="" description=""/>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="LiamW_VanityNames_Listener" callback_method="extendAccountController" active="1" hint="XenForo_ControllerPublic_Account" description="XenForo_ControllerPublic_Account"/>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="LiamW_VanityNames_Listener" callback_method="extendUserAdminController" active="1" hint="XenForo_ControllerAdmin_User" description="XenForo_ControllerAdmin_User"/>
+    <listener event_id="load_class_datawriter" execute_order="10" callback_class="LiamW_VanityNames_Listener" callback_method="extendUserDataWriter" active="1" hint="XenForo_DataWriter_User" description="XenForo_DataWriter_User"/>
+    <listener event_id="load_class_model" execute_order="10" callback_class="LiamW_VanityNames_Listener" callback_method="extendUserModel" active="1" hint="XenForo_Model_User" description="XenForo_Model_User"/>
+    <listener event_id="load_class_route_prefix" execute_order="10" callback_class="LiamW_VanityNames_Listener" callback_method="extendMembersRoute" active="1" hint="XenForo_Route_Prefix_Members" description="XenForo_Route_Prefix_Members"/>
+    <listener event_id="prepare_user_change_log_field" execute_order="10" callback_class="LiamW_VanityNames_Listener" callback_method="changeLogField" active="1" hint="" description=""/>
   </code_event_listeners>
   <cron/>
   <email_templates/>
   <email_template_modifications/>
   <optiongroups>
     <group group_id="vanityNames_options" display_order="5000" debug_only="0"/>
+    <option option_id="vanityNames_auto_apply" edit_format="template" data_type="array" can_backup="1">
+      <default_value></default_value>
+      <edit_format_params>liam_vanityNames_option_auto_apply</edit_format_params>
+      <sub_options>enabled
+disableCustom</sub_options>
+      <relation group_id="vanityNames_options" display_order="10"/>
+    </option>
     <option option_id="vanityNames_mode" edit_format="template" data_type="string" can_backup="1">
       <default_value>redirect</default_value>
       <edit_format_params>vanityNames_option_mode</edit_format_params>
@@ -94,7 +137,7 @@
       <default_value>a:0:{}</default_value>
       <edit_format_params>LiamW_VanityNames_Option_RestrictedWords::renderOption</edit_format_params>
       <sub_options>*</sub_options>
-      <relation group_id="vanityNames_options" display_order="100"/>
+      <relation group_id="vanityNames_options" display_order="20"/>
     </option>
   </optiongroups>
   <permissions>
@@ -110,11 +153,15 @@
     <phrase title="liam_vanitynames_invalid_format" version_id="10301" version_string="1.3.1"><![CDATA[The entered name contains invalid characters.]]></phrase>
     <phrase title="liam_vanitynames_name_cannot_be_route" version_id="10102" version_string="1.1.2"><![CDATA[Your chosen name is a route! You cannot use a route as a vanity name.]]></phrase>
     <phrase title="liam_vanitynames_notunique" version_id="1" version_string="1.0"><![CDATA[Someone has already chosen that vanity name, please choose a different one!]]></phrase>
+    <phrase title="liam_vanityNames_regenerate_vanity_names" version_id="10303" version_string="1.3.3"><![CDATA[Regenerate Vanity Names]]></phrase>
     <phrase title="liam_vanitynames_restricted" version_id="10000" version_string="1.0.0"><![CDATA[That name cannot be used, please choose a different one.]]></phrase>
+    <phrase title="liam_vanityNames_will_regenerate_all_names_based_on_username" version_id="10303" version_string="1.3.3"><![CDATA[This will regenerate <b>all</b> vanity names based on the username.]]></phrase>
     <phrase title="liam_vanitynames_word" version_id="10000" version_string="1.0.0"><![CDATA[Word]]></phrase>
     <phrase title="liam_vanityname_explain" version_id="10201" version_string="1.2.1"><![CDATA[If set, this page can be used to access your profile instead of your name and user id. <b>Current profile URL: <a href="{profileUrl}">{profileUrl}</a>.</b>]]></phrase>
     <phrase title="option_group_vanityNames_options" version_id="10201" version_string="1.2.1"><![CDATA[Vanity Names]]></phrase>
     <phrase title="option_group_vanityNames_options_description" version_id="10201" version_string="1.2.1"><![CDATA[]]></phrase>
+    <phrase title="option_vanityNames_auto_apply" version_id="10303" version_string="1.3.3"><![CDATA[Automatically Apply Vanity Name]]></phrase>
+    <phrase title="option_vanityNames_auto_apply_explain" version_id="10303" version_string="1.3.3"><![CDATA[If checked, the vanity name will be automatically set on registration based on the username with special characters stripped. Spaces and underscores are converted to hyphens.]]></phrase>
     <phrase title="option_vanityNames_mode" version_id="10201" version_string="1.2.1"><![CDATA[Mode]]></phrase>
     <phrase title="option_vanityNames_mode_explain" version_id="10201" version_string="1.2.1"><![CDATA[]]></phrase>
     <phrase title="option_vanityNames_restrictedNames" version_id="10201" version_string="1.2.1"><![CDATA[Restricted Names]]></phrase>
@@ -122,10 +169,14 @@
 <br><br>
 They can be used by admins editing in the admin panel.]]></phrase>
     <phrase title="permission_general_liam_vanitynames_use" version_id="1" version_string="1.0"><![CDATA[Use vanity name]]></phrase>
+    <phrase title="vanityNames_disable_custom" version_id="10303" version_string="1.3.3"><![CDATA[Disable Custom]]></phrase>
+    <phrase title="vanityNames_disable_custom_hint" version_id="10303" version_string="1.3.3"><![CDATA[If checked, users will be unable to set their own vanity name regardless of permissions.]]></phrase>
     <phrase title="vanityNames_mode_park" version_id="10201" version_string="1.2.1"><![CDATA[Park]]></phrase>
     <phrase title="vanityNames_mode_park_explain" version_id="10201" version_string="1.2.1"><![CDATA[If this is used, the vanity name URL will replace the main profile URL - the main profile URL will be redirected to the vanity name URL.]]></phrase>
     <phrase title="vanityNames_mode_redirect" version_id="10201" version_string="1.2.1"><![CDATA[Redirect]]></phrase>
     <phrase title="vanityNames_mode_redirect_explain" version_id="10201" version_string="1.2.1"><![CDATA[Vanity names will be redirected to the main profile URL.]]></phrase>
+    <phrase title="vanityNames_regenerating" version_id="10303" version_string="1.3.3"><![CDATA[Regenerating]]></phrase>
+    <phrase title="vanityNames_vanity_names" version_id="10303" version_string="1.3.3"><![CDATA[Vanity Names]]></phrase>
   </phrases>
   <route_prefixes/>
   <style_properties/>

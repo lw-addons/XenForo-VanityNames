@@ -26,6 +26,9 @@ class LiamW_VanityNames_Extend_Model_User extends XFCP_LiamW_VanityNames_Extend_
 
 }
 
-/*class XFCP_LiamW_VanityNames_Extend_Model_User extends XenForo_Model_User
+if (false)
 {
-}*/
+	class XFCP_LiamW_VanityNames_Extend_Model_User extends XenForo_Model_User
+	{
+	}
+}
